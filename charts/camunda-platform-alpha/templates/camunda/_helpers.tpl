@@ -562,7 +562,7 @@ Zeebe templates.
 {{/*
 [camunda-platform] Zeebe Gateway GRPC external URL.
 */}}
-{{- define "camundaPlatform.zeebeGatewayGRPCExternalURL" -}}
+{{- define "camundaPlatform.coreGRPCExternalURL" -}}
   {{ $proto := ternary "https" "http" .Values.core.ingress.grpc.tls.enabled -}}
   {{- printf "%s://%s" $proto (tpl .Values.core.ingress.grpc.host . | default "localhost:26500") -}}
 {{- end -}}
@@ -669,11 +669,11 @@ Release templates.
     readiness: {{ printf "%s%s%s" $baseURLInternal .Values.core.contextPath .Values.core.readinessProbe.probePath }}
     metrics: {{ printf "%s%s%s" $baseURLInternal .Values.core.contextPath .Values.core.metrics.prometheus }}
 
-  - name: Zeebe Gateway
-    id: zeebeGateway
+  - name: Orchestration Core
+    id: core
     version: {{ include "camundaPlatform.imageTagByParams" (dict "base" .Values.global "overlay" .Values.core) }}
     urls:
-      grpc: {{ include "camundaPlatform.zeebeGatewayGRPCExternalURL" . }}
+      grpc: {{ include "camundaPlatform.coreGRPCExternalURL" . }}
       http: {{ include "camundaPlatform.coreExternalURL" . }}
     readiness: {{ printf "%s%s%s" $baseURLInternal .Values.core.contextPath .Values.core.readinessProbe.probePath }}
     metrics: {{ printf "%s%s%s" $baseURLInternal .Values.core.contextPath .Values.core.metrics.prometheus }}
